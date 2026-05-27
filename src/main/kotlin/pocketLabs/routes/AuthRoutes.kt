@@ -11,8 +11,20 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import org.mindrot.jbcrypt.BCrypt
+import com.example.pocketLabs.security.JwtServices
+
 
 fun Route.authRoutes() {
+    val jwtSecret = environment.config.property("jwt.secret").getString()
+    val jwtIssuer = environment.config.property("jwt.issuer").getString()
+    val jwtAudience = environment.config.property("jwt.audience").getString()
+
+    val jwtService = JwtServices(
+        secret = jwtSecret,
+        issuer = jwtIssuer,
+        audience = jwtAudience
+    )
+
     route("/auth") {
         post("/register"){
             val request = call.receive<RegisterRequest>()
@@ -30,11 +42,13 @@ fun Route.authRoutes() {
                 name = request.name,
                 passwordHash = hashedPassword
             )
+            val token = jwtService.generateToken(userId,request.email)
             val response = AuthResponse(
-                token = "dummy",
+                token = token,
                 userId = userId ,
                 email = request.email
             )
+            call.respond(HttpStatusCode.Created, response)
         }
         post("/login"){
             val request = call.receive<LoginRequest>()
@@ -55,9 +69,9 @@ fun Route.authRoutes() {
                 call.respond(HttpStatusCode.Unauthorized,"Incorrect Password")
                 return@post
             }
-
+            val token = jwtService.generateToken(userId,email)
             val response = AuthResponse(
-                token = "dummy",
+                token = token,
                 userId = userId ,
                 email = email
             )
