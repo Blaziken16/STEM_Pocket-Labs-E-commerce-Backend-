@@ -4,7 +4,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentTimestamp
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-object UsersTable : IntIdTable("users") {
+object  UsersTable : IntIdTable("users") {
     val name = varchar("name", 255)
 
     val email = varchar("email", 255).uniqueIndex()

@@ -19,3 +19,12 @@ data class AuthResponse(
     val userId: Int,
     val email: String,
 )
+
+@Serializable
+data class UserInfo(
+    val id: Int,
+    val name: String,
+    val email: String,
+    val passwordHashed: String,
+    val role: String,
+)

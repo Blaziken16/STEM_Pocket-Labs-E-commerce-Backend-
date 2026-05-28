@@ -2,6 +2,8 @@ package com.example.pocketLabs.plugins
 
 import com.example.pocketLabs.models.MeResponse
 import com.example.pocketLabs.routes.authRoutes
+import com.example.pocketLabs.routes.cartRoutes
+import com.example.pocketLabs.routes.productRoutes
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
@@ -32,5 +34,8 @@ fun Application.configureRouting() {
                 )
             }
         }
+        productRoutes()
+        cartRoutes()
+
     }
 }

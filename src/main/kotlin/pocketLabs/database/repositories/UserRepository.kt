@@ -2,6 +2,7 @@ package com.example.pocketLabs.database.repositories
 
 import com.example.pocketLabs.database.DatabaseFactory
 import com.example.pocketLabs.database.tables.UsersTable
+import com.example.pocketLabs.models.UserInfo
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
@@ -30,6 +31,23 @@ object UserRepository {
                 it[UsersTable.name] = name
                 it[UsersTable.passwordHash] = passwordHash
             }[UsersTable.id].value
+        }
+    }
+
+    suspend fun getUserById(id: Int): UserInfo? {
+        return DatabaseFactory.dbQuery {
+            UsersTable.selectAll()
+                .where(UsersTable.id.eq(id))
+                .map{
+                    UserInfo(
+                        id = it[UsersTable.id].value,
+                        name = it[UsersTable.name],
+                        email = it[UsersTable.email],
+                        passwordHashed = it[UsersTable.passwordHash],
+                        role = it[UsersTable.role]
+                    )
+                }
+                .singleOrNull()
         }
     }
 }
