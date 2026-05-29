@@ -13,6 +13,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 fun Route.productRoutes() {
@@ -88,6 +89,42 @@ fun Route.productRoutes() {
                     call.respond(HttpStatusCode.NotFound, "Product not found")
                 } else {
                     call.respond(HttpStatusCode.OK, "Product deleted successfully")
+                }
+            }
+            put("/{id}") {
+                val principal = call.principal<JWTPrincipal>()
+                val userId = principal?.payload?.getClaim("userId")?.asInt()
+
+                if (userId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, "Invalid Token")
+                    return@put
+                }
+
+                val user = UserRepository.getUserById(userId)
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    return@put
+                }
+
+                if (user.role != "admin") {
+                    call.respond(HttpStatusCode.Forbidden, "Only admin can update products")
+                    return@put
+                }
+
+                val productId = call.parameters["id"]?.toIntOrNull()
+                if (productId == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid product id")
+                    return@put
+                }
+
+                val request = call.receive<CreateProductRequest>()
+
+                val updatedProduct = ProductRepository.updateProduct(productId, request)
+
+                if (updatedProduct == null) {
+                    call.respond(HttpStatusCode.NotFound, "Product not found")
+                } else {
+                    call.respond(HttpStatusCode.OK, updatedProduct)
                 }
             }
         }

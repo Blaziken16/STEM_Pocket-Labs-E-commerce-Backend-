@@ -15,6 +15,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 object ProductRepository{
     fun createProduct(request: CreateProductRequest) = transaction {
@@ -73,5 +74,35 @@ object ProductRepository{
     }
     fun deleteProduct(productId: Int): Boolean = transaction {
         ProductTable.deleteWhere { ProductTable.id.eq(productId) } > 0
+    }
+    fun updateProduct(productId: Int, request: CreateProductRequest): ProductResponse? = transaction {
+        val updatedRows = ProductTable.update({ ProductTable.id eq productId }) {
+            it[name] = request.name
+            it[description] = request.description
+            it[price] = request.price.toBigDecimal()
+            it[stock] = request.stock
+            it[image_url] = request.image_url
+            it[category] = request.category
+        }
+
+        if (updatedRows == 0) {
+            null
+        } else {
+            ProductTable
+                .selectAll()
+                .where { ProductTable.id eq productId }
+                .map { row ->
+                    ProductResponse(
+                        id = row[ProductTable.id].value,
+                        name = row[ProductTable.name],
+                        description = row[ProductTable.description],
+                        price = row[ProductTable.price].toDouble(),
+                        stock = row[ProductTable.stock],
+                        image_url = row[ProductTable.image_url],
+                        category = row[ProductTable.category]
+                    )
+                }
+                .singleOrNull()
+        }
     }
 }
