@@ -7,5 +7,8 @@ data class OrderResponse (
     val orderId: Int,
     val userId: Int,
     val totalAmount: Double,
-    val status: String
+    val paymentMethod: String,
+    val paymentStatus: String,
+    val orderStatus: String,
+    val razorPayId: String? = null
 )
