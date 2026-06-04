@@ -7,6 +7,7 @@ import com.example.pocketLabs.database.tables.OrderTable
 import com.example.pocketLabs.database.tables.OrderTable.orderStatus
 import com.example.pocketLabs.database.tables.OrderTable.paymentStatus
 import com.example.pocketLabs.database.tables.ProductTable
+import com.example.pocketLabs.models.OrderItemResponse
 import com.example.pocketLabs.models.OrderResponse
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -14,10 +15,29 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.innerJoin
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 object OrderRepository{
+    private fun getOrderItems(orderId: Int): List<OrderItemResponse> {
+        return OrderItemTable.innerJoin(ProductTable)
+            .selectAll()
+            .where { OrderItemTable.order_id eq orderId }
+            .toList()
+            .groupBy { it[OrderItemTable.product_id] }
+            .map { (productId, rows) ->
+                val firstRow = rows.first()
+                OrderItemResponse(
+                    productId = productId.toString(),
+                    name = firstRow[ProductTable.name],
+                    quantity = rows.sumOf { it[OrderItemTable.quantity] },
+                    pricePaid = firstRow[OrderItemTable.priceAtPurchase].toDouble(),
+                    image = firstRow[ProductTable.image_url]
+                )
+            }
+    }
+
     fun getOrderByUserId(userId:Int): List<OrderResponse> = transaction {
         OrderTable
             .selectAll()
@@ -30,6 +50,7 @@ object OrderRepository{
                     paymentMethod = row[OrderTable.paymentMethod],
                     paymentStatus = row[OrderTable.paymentStatus],
                     orderStatus = row[OrderTable.orderStatus],
+                    items = getOrderItems(row[OrderTable.id].value),
                     razorPayId = row[OrderTable.razorPayId]
                 )
             }
@@ -84,10 +105,11 @@ object OrderRepository{
             OrderResponse(
                 orderId      = orderId,
                 userId       = userId,
-                totalAmount  = totalAmount,
+                totalAmount  = totalAmount.toDouble(),
                 orderStatus   = "PROCESSING",
                 paymentMethod = paymentMethod,
                 paymentStatus = "PENDING",
+                items = getOrderItems(orderId),
                 razorPayId = null
             )
         }
@@ -123,6 +145,7 @@ object OrderRepository{
                         paymentMethod = row[OrderTable.paymentMethod],
                         paymentStatus = row[OrderTable.paymentStatus],
                         orderStatus = row[OrderTable.orderStatus],
+                        items = getOrderItems(row[OrderTable.id].value),
                         razorPayId = row[OrderTable.razorPayId]
                     )
                 }

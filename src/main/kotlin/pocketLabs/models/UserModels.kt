@@ -16,8 +16,17 @@ data class LoginRequest(
 @Serializable
 data class AuthResponse(
     val token: String,
-    val userId: Int,
+    val user: UserResponse
+)
+
+@Serializable
+data class UserResponse(
+    val id: String,
     val email: String,
+    val name: String,
+    val isPremium: Boolean,
+    val memberSince: String,
+    val role: String
 )
 
 @Serializable

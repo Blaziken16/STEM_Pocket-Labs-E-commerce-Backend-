@@ -6,18 +6,21 @@ import com.example.pocketLabs.models.UserInfo
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.update
 
 object UserRepository {
 
-    suspend fun findUserByEmail(email: String): Triple<Int, String, String>? {
+    suspend fun findUserByEmail(email: String): UserInfo? {
         return DatabaseFactory.dbQuery {
             UsersTable.selectAll()
                 .where(UsersTable.email.eq(email))
                 .map{
-                    Triple(
-                        it[UsersTable.id].value,
-                        it[UsersTable.name],
-                        it[UsersTable.passwordHash]
+                    UserInfo(
+                        id = it[UsersTable.id].value,
+                        name = it[UsersTable.name],
+                        email = it[UsersTable.email],
+                        passwordHashed = it[UsersTable.passwordHash],
+                        role = it[UsersTable.role]
                     )
                 }
                 .singleOrNull()
@@ -48,6 +51,14 @@ object UserRepository {
                     )
                 }
                 .singleOrNull()
+        }
+    }
+
+    suspend fun updateUserRole(id: Int, role: String): Boolean {
+        return DatabaseFactory.dbQuery {
+            UsersTable.update({ UsersTable.id eq id }) {
+                it[UsersTable.role] = role
+            } > 0
         }
     }
 }

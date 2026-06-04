@@ -1,6 +1,7 @@
 package com.example.pocketLabs.plugins
 
-import com.example.pocketLabs.models.MeResponse
+import com.example.pocketLabs.models.UserResponse
+import com.example.pocketLabs.database.repositories.UserRepository
 import com.example.pocketLabs.routes.authRoutes
 import com.example.pocketLabs.routes.cartRoutes
 import com.example.pocketLabs.routes.orderRoutes
@@ -17,6 +18,16 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     install(CORS){
         anyHost()
+        allowMethod(io.ktor.http.HttpMethod.Options)
+        allowMethod(io.ktor.http.HttpMethod.Get)
+        allowMethod(io.ktor.http.HttpMethod.Post)
+        allowMethod(io.ktor.http.HttpMethod.Put)
+        allowMethod(io.ktor.http.HttpMethod.Delete)
+
+        allowHeader(io.ktor.http.HttpHeaders.ContentType)
+        allowHeader(io.ktor.http.HttpHeaders.Authorization)
+
+        allowCredentials = true
     }
     routing {
         authRoutes()
@@ -25,12 +36,22 @@ fun Application.configureRouting() {
             get("/me"){
                 val principal = call.principal<JWTPrincipal>()
                 val userId = principal!!.payload.getClaim("userId").asInt()
-                val email = principal.payload.getClaim("email").asString()
+                
+                val user = UserRepository.getUserById(userId)
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    return@get
+                }
+
                 call.respond(
                     HttpStatusCode.OK,
-                    MeResponse(
-                        userId = userId,
-                        email = email,
+                    UserResponse(
+                        id = user.id.toString(),
+                        email = user.email,
+                        name = user.name,
+                        isPremium = false,
+                        memberSince = "Recently",
+                        role = user.role
                     )
                 )
             }

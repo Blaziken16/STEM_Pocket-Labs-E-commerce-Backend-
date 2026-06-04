@@ -49,7 +49,8 @@ fun Route.cartRoutes() {
                     productId = request.productId,
                     quantity = request.quantity,
                 )
-                call.respond(HttpStatusCode.OK,"item was added to the cart")
+                val updatedCart = CartRepository.getCartItemsByUserId(userId)
+                call.respond(HttpStatusCode.OK, updatedCart)
             }
 
             delete("/{productId}") {
@@ -73,7 +74,8 @@ fun Route.cartRoutes() {
                     productId = productId
                 )
                 if(remove){
-                    call.respond(HttpStatusCode.OK, "Cart removed successfully")
+                    val updatedCart = CartRepository.getCartItemsByUserId(userId)
+                    call.respond(HttpStatusCode.OK, updatedCart)
                 }else{
                     call.respond(HttpStatusCode.NotFound, "Item not found")
                 }

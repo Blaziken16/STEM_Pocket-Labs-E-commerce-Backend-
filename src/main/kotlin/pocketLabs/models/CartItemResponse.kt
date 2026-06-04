@@ -8,4 +8,5 @@ data class CartItemResponse (
     val userId : Int,
     val productId : Int,
     val quantity : Int,
+    val product: ProductResponse? = null
 )
