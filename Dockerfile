@@ -1,7 +1,7 @@
 FROM gradle:8.7-jdk21 AS build
 WORKDIR /app
 COPY . .
-RUN gradle clean shadowJar --no-daemon
+RUN gradle clean buildFatJar --no-daemon
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
