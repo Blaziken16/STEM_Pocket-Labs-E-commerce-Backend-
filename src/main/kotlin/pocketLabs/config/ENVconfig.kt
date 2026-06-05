@@ -4,7 +4,9 @@ package com.example.pocketLabs.config
 import io.github.cdimascio.dotenv.dotenv
 
 object EnvConfig {
-    private val env = dotenv()
+    private val env = dotenv {
+        ignoreIfMissing = true
+    }
 
     val dbUrl: String = env["DB_URL"]
         ?: error("DB_URL is missing in .env")
