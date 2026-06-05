@@ -73,6 +73,8 @@ object ProductRepository{
         .singleOrNull()
     }
     fun deleteProduct(productId: Int): Boolean = transaction {
+        com.example.pocketLabs.database.tables.CartTable.deleteWhere { com.example.pocketLabs.database.tables.CartTable.product_id.eq(productId) }
+        com.example.pocketLabs.database.tables.OrderItemTable.deleteWhere { com.example.pocketLabs.database.tables.OrderItemTable.product_id.eq(productId) }
         ProductTable.deleteWhere { ProductTable.id.eq(productId) } > 0
     }
     fun updateProduct(productId: Int, request: CreateProductRequest): ProductResponse? = transaction {
