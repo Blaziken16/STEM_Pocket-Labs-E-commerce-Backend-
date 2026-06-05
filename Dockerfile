@@ -1,7 +1,7 @@
-FROM gradle:8.7-jdk21 AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 COPY . .
-RUN gradle clean buildFatJar --no-daemon
+RUN chmod +x gradlew && sed -i 's/\r$//' gradlew && ./gradlew clean buildFatJar --no-daemon
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
