@@ -8,20 +8,20 @@ object EnvConfig {
         ignoreIfMissing = true
     }
 
-    val dbUrl: String = env["DB_URL"]
-        ?: error("DB_URL is missing in .env")
+    val dbUrl: String = System.getenv("DB_URL") ?: env["DB_URL"]
+        ?: error("DB_URL is missing in environment variables")
 
-    val dbUser: String = env["DB_USER"]
-        ?: error("DB_USER is missing in .env")
+    val dbUser: String = System.getenv("DB_USER") ?: env["DB_USER"]
+        ?: error("DB_USER is missing in environment variables")
 
-    val dbPassword: String = env["DB_PASSWORD"]
-        ?: error("DB_PASSWORD is missing in .env")
+    val dbPassword: String = System.getenv("DB_PASSWORD") ?: env["DB_PASSWORD"]
+        ?: error("DB_PASSWORD is missing in environment variables")
 
-    val jwtSecret: String = env["JWT_SECRET"]
-        ?: error("JWT_SECRET is missing in .env")
+    val jwtSecret: String = System.getenv("JWT_SECRET") ?: env["JWT_SECRET"]
+        ?: error("JWT_SECRET is missing in environment variables")
 
-    val jwtIssuer: String = env["JWT_ISSUER"] ?: "pocketlabs-backend"
-    val jwtAudience: String = env["JWT_AUDIENCE"] ?: "pocketlabs-users"
-    val jwtRealm: String = env["JWT_REALM"] ?: "Access to PocketLabs API"
-    val port: String = env["PORT"] ?: "8080"
+    val jwtIssuer: String = System.getenv("JWT_ISSUER") ?: env["JWT_ISSUER"] ?: "pocketlabs-backend"
+    val jwtAudience: String = System.getenv("JWT_AUDIENCE") ?: env["JWT_AUDIENCE"] ?: "pocketlabs-users"
+    val jwtRealm: String = System.getenv("JWT_REALM") ?: env["JWT_REALM"] ?: "Access to PocketLabs API"
+    val port: String = System.getenv("PORT") ?: env["PORT"] ?: "8080"
 }
