@@ -1,12 +1,12 @@
 jwt:
-  secret: "$JWT_SECRET"
-  issuer: "$JWT_ISSUER"
-  audience: "$JWT_AUDIENCE"
-  realm: "$JWT_REALM"
+  secret: ${JWT_SECRET:"holiday-West-World-key-1516"}
+  issuer: ${JWT_ISSUER:"pocketlabs-backend"}
+  audience: ${JWT_AUDIENCE:"pocketlabs-users"}
+  realm: ${JWT_REALM:"Access to PocketLabs API"}
 
 ktor:
   deployment:
-    port: "$PORT:8080"
+    port: ${PORT:8080}
     host: 0.0.0.0
   application:
     modules:
