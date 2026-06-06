@@ -1,36 +1,87 @@
-# ktor-sample
+# STEM Pocket Labs E-Commerce Backend
+A robust, secure, and highly responsive e-commerce backend and landing page server built entirely from scratch to power STEM Pocket Labs.
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+🟢 **Live Status:** Deployed and running on Render.com
+## Table of Contents
+>About the Project
 
-Here are some useful links to get you started:
- * [Ktor Documentation](https://ktor.io/docs/home.html)
- * [Ktor GitHub page](https://github.com/ktorio/ktor)
- * [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). [Request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up).
+>Key Features
+
+>Tech Stack
+
+>Getting Started
+
+>Project Structure
+
+>About the Developer
+
+## About the Project
+This repository contains the backend infrastructure for the STEM Pocket Labs e-commerce platform. Building this from scratch allowed for complete control over the architecture, ensuring high performance, top-tier security, and a flexible foundation. By utilizing Ktor, the application remains exceptionally lightweight, and maintaining Kotlin on the backend creates a seamless bridge for future mobile application integrations.
+
+## Key Features
+- Secure User Authentication: Implements JSON Web Tokens (JWT) for stateless, secure user sessions.
+
+* Robust Database Management: Fully integrated with PostgreSQL for reliable, relational data storage of products, users, and orders.
+
++ Cross-Origin Support: Pre-configured CORS to easily accept requests from the frontend.
+
+- Automated Content Negotiation: Uses kotlinx.serialization to automatically serialize and deserialize JSON payloads.
 
 
-## Features
-Here's a list of features included in this project:
-
-| Name | Description |
-|------|-------------|
-| [Status Pages](https://start.ktor.io/p/io.ktor/server-status-pages) | Provides exception handling for routes |
-| [Authentication](https://start.ktor.io/p/io.ktor/server-auth) | Provides extension point for handling the Authorization header |
-| [Authentication JWT](https://start.ktor.io/p/io.ktor/server-auth-jwt) | Handles JSON Web Token (JWT) bearer authentication scheme |
-| [kotlinx.serialization](https://start.ktor.io/p/io.ktor/server-kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library |
-| [Content Negotiation](https://start.ktor.io/p/io.ktor/server-content-negotiation) | Provides automatic content conversion according to Content-Type and Accept headers |
-| [PostgreSQL](https://start.ktor.io/p/org.jetbrains/server-postgres) | Adds Postgres database support |
-| [CORS](https://start.ktor.io/p/io.ktor/server-cors) | Enables Cross-Origin Resource Sharing (CORS) |
+- Graceful Error Handling: Centralized exception handling via Ktor Status Pages to ensure API clients receive clean, readable error messages.
 
 
-## Building & Running
-To build or run the project, use one of the following tasks:
+- Cryptographic Password Hashing: Ensures user credentials are securely salted and hashed before entering the PostgreSQL database, protecting against plaintext data breaches.
 
 
-| Task | Description |
-|------|-------------|
+- Environment Security & Hidden Keys: All sensitive API keys, JWT secrets, and database credentials are fully abstracted using environment variables. No secrets are ever exposed in the source code.
 
-If the server starts successfully, you'll see the following output:
+# Tech Stack
+**Language:** Kotlin
+
+**Framework:** Ktor
+
+**Database:** PostgreSQL
+
+**Authentication:** JWT (JSON Web Tokens)
+
+**Serialization**: kotlinx.serialization
+
+## Getting Started
+- Prerequisites
+JDK 11 or higher
+
+- PostgreSQL running locally or remotely
+
+- Installation & Execution
+Clone the repository:
+
+```Bash
+git clone https://github.com/Blaziken16/STEM_Pocket-Labs-E-commerce-Backend-.git
 ```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
+Navigate to the project directory:
+
+```Bash
+cd STEM_Pocket-Labs-E-commerce-Backend-
 ```
+Build the project using Gradle:
+
+```Bash
+./gradlew build
+````
+Run the server:
+```Bash
+./gradlew run
+```
+If the server starts successfully, it will respond at https://stem-pocket-labs-e-commerce-backend.onrender.com.
+
+## 📂 **Project Structure**
+```Plaintext
+├── src/                # Core application source code (routing, models, plugins)
+├── gradle/             # Gradle wrapper scripts
+├── build.gradle.kts    # Project dependencies and configurations
+├── Dockerfile          # Containerization instructions
+└── README.md           # You are here!
+```
+# About the Developer
+Built by Rishabh Upadhyay. As a 2nd-year B.Tech student at VIT-AP, I am highly focused on mastering scalable software architecture. Building backend systems like this provides a strong foundation that pairs perfectly with my interests in Android development and integrating AI/ML capabilities into modern applications.
