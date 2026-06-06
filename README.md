@@ -73,6 +73,8 @@ Run the server:
 ```Bash
 ./gradlew run
 ```
+**Frontend Repo:** [STEM Pocket Labs E-commerce Frontend](https://github.com/Blaziken16/STEM_Pocket-Labs-E-commerce-Frontend.git)
+
 If the server starts successfully, it will respond at https://stem-pocket-labs-e-commerce-backend.onrender.com.
 
 ## 📂 **Project Structure**
